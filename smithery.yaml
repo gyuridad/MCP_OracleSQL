@@ -1,0 +1,14 @@
+name: oracle-sql-mcp
+title: Oracle SQL MCP
+description: OracleSQL DB 연결 질의응답 MCP 서버 (FastMCP)
+
+startCommand:
+  type: http
+  commandFunction: |
+    (config) => ({
+      command: "python",
+      args: ["mcp_server_remote.py"],
+      env: {
+        PORT: "8005"
+      }
+    })

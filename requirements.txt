@@ -1,0 +1,11 @@
+mcp
+oracledb==3.3.0
+pandas==2.3.2
+python-dotenv==1.1.1
+langchain==0.3.27
+langgraph==0.6.6
+langgraph-prebuilt==0.6.4
+langchain-openai==0.3.31
+ipykernel==6.29.5
+matplotlib==3.10.0
+jupyterlab
