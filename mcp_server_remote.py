@@ -6,7 +6,7 @@ mcp = FastMCP(
     host="0.0.0.0",  # Host address (0.0.0.0 allows connections from any IP)
     port=8005,  # Port number for the server
 )
-
+ 
 
 @mcp.tool()
 async def get_SQL_answer(question: str) -> str:
@@ -488,13 +488,26 @@ async def get_SQL_answer(question: str) -> str:
 
     inputs = {"messages": [("user", question)]}
 
-    result = ""
-    for chunk in app.stream(inputs, stream_mode="values"):
-        for state_key, state_value in chunk.items():
-            if state_key == "messages":
-                result.append(state_value[-1].pretty_print())
+    ## 모든 내용이 나와서 지저분함 아래 결과만 출력하게 수정함 !!!
+    # result = []
+    # for chunk in app.stream(inputs, stream_mode="values"):
+    #     for state_key, state_value in chunk.items():
+    #         if state_key == "messages":
+    #             msg = state_value[-1]
+    #             result.append(str(msg))
 
-    return result
+    # return "\n".join(result)
+
+    final_text = None
+    for chunk in app.stream(inputs, stream_mode="values"):
+        msgs = chunk.get("messages", [])
+        if msgs:
+            last = msgs[-1]
+            # last.content에 <FINAL>...</FINAL> 들어있음
+            if isinstance(last, AIMessage) and last.content and "<FINAL>" in last.content:
+                final_text = last.content
+
+    return final_text or "Error: No FINAL answer produced."
 
 if __name__ == "__main__":
     # Print a message indicating the server is starting
